@@ -78,9 +78,14 @@ bool TreeItem::removeChildren(int position, int count)
 {
     if (position < 0 || position + count > childItems.size())
         return false;
-
     for (int row = 0; row < count; ++row)
-        delete childItems.takeAt(position);
+        childItems.remove(position);
+    if(this->childCount() == 0){
+        parentItem->childItems.remove(0);
+    }
+    if(parentItem->childCount() == 0){
+        parentItem->parentItem->childItems.remove(0);
+    }
 
     return true;
 }

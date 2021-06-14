@@ -29,7 +29,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value,
                  int role = Qt::EditRole) override;
 
-    bool setAlbumData(const QModelIndex &index, const QMap<QString, QString> data,
+    void setAlbumData(const QModelIndex &index, const QMap<QString, QString> data,
                  int role = Qt::EditRole);
 
     bool setHeaderData(int section, Qt::Orientation orientation,
@@ -49,6 +49,8 @@ private:
     void setupModelData(const QString &fileName, TreeItem *parent);
 
     TreeItem *rootItem;
+
+    void insertAlbum(TreeItem *parent, QMap<QString, QString> album);
 
 
 };

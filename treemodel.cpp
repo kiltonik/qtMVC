@@ -236,142 +236,7 @@ void TreeModel::setupModelData(const QString &fileName, TreeItem *parent)
                     }
                     xmlReader.readNext();
                 }
-
-                bool itemNotInserted = true;
-                for(int i = 0; i < parent->childCount(); ++i){
-                    if(parent->child(i)->getAlbumData()["genre"] == album["genre"]){
-
-                        for(int j = 0; j < parent->child(i)->childCount(); ++j){
-
-                            if(parent->child(i)->child(j)->getAlbumData()["singer"] == album["singer"]){
-                                itemNotInserted = false;
-
-                                parent
-                                        ->child(i)
-                                        ->child(j)
-                                        ->insertChildren(
-                                            parent->child(i)->child(j)->childCount(),
-                                            1,
-                                            rootItem->columnCount()
-                                            );
-                                parent
-                                        ->child(i)
-                                        ->child(j)
-                                        ->child(parent->child(i)->child(j)->childCount() - 1)
-                                        ->setColumnData(0, album["title"]);
-                                parent
-                                        ->child(i)
-                                        ->child(j)
-                                        ->child(parent->child(i)->child(j)->childCount() - 1)
-                                        ->setData(album);
-                            }
-                        }
-                        if(itemNotInserted){
-                            itemNotInserted = false;
-
-                            parent
-                                    ->child(i)
-                                    ->insertChildren(
-                                        parent->child(i)->childCount(),
-                                        1,
-                                        rootItem->columnCount()
-                                        );
-                            parent
-                                    ->child(i)
-                                    ->child(parent->child(i)->childCount() - 1)
-                                    ->setColumnData(0, album["singer"]);
-                            parent
-                                    ->child(i)
-                                    ->child(parent->child(i)->childCount() - 1)
-                                    ->setData(album);
-
-                            parent
-                                    ->child(i)
-                                    ->child(
-                                        parent->child(i)->childCount() -1
-                                        )
-                                    ->insertChildren(
-                                        parent->child(i)->child(
-                                            parent->child(i)->childCount() -1
-                                            )->childCount(),
-                                        1,
-                                        rootItem->columnCount()
-                                        );
-                            parent
-                                    ->child(i)
-                                    ->child(
-                                        parent->child(i)->childCount() -1
-                                        )->child(parent->child(i)->child(
-                                                     parent->child(i)->childCount() -1
-                                                     )->childCount() - 1)
-                                    ->setColumnData(0, album["title"]);
-                            parent
-                                    ->child(i)
-                                    ->child(
-                                        parent->child(i)->childCount() -1
-                                        )->child(parent->child(i)->child(
-                                                     parent->child(i)->childCount() -1
-                                                     )->childCount() - 1)
-                                    ->setData(album);
-                        }
-                    }
-                }
-                if(itemNotInserted){
-                    parent
-                            ->insertChildren(
-                                parent->childCount(),
-                                1,
-                                rootItem->columnCount()
-                                );
-
-                    int firstIndex = parent->childCount() - 1;
-
-                    parent
-                            ->child(firstIndex)
-                            ->setColumnData(0, album["genre"]);
-                    parent
-                            ->child(firstIndex)
-                            ->setData(album);
-
-                    parent
-                            ->child(firstIndex)
-                            ->insertChildren(
-                                parent->child(firstIndex)->childCount(),
-                                1,
-                                rootItem->columnCount()
-                                );
-
-                    int secondIndex = parent->child(firstIndex)->childCount() - 1;
-
-                    parent
-                            ->child(firstIndex)
-                            ->child(secondIndex)
-                            ->setColumnData(0, album["singer"]);
-
-                    parent
-                            ->child(firstIndex)
-                            ->child(secondIndex)
-                            ->setData(album);
-
-                    parent
-                            ->child(firstIndex)
-                            ->child(secondIndex)
-                            ->insertChildren(
-                                parent->child(firstIndex)->child(secondIndex)->childCount(),
-                                1,
-                                rootItem->columnCount()
-                                );
-                    parent
-                            ->child(firstIndex)
-                            ->child(secondIndex)
-                            ->child(parent->child(firstIndex)->child(secondIndex)->childCount() - 1)
-                            ->setColumnData(0, album["title"]);
-                    parent
-                            ->child(firstIndex)
-                            ->child(secondIndex)
-                            ->child(parent->child(firstIndex)->child(secondIndex)->childCount() - 1)
-                            ->setData(album);
-                }
+                insertAlbum(parent, album);
             }
 
         }
@@ -379,6 +244,160 @@ void TreeModel::setupModelData(const QString &fileName, TreeItem *parent)
     file.close();
 }
 
-bool TreeModel::setAlbumData(const QModelIndex &index, const QMap<QString, QString> data, int role){
-    return true;
+void TreeModel::insertAlbum(TreeItem *parent, QMap<QString, QString> album){
+    bool itemNotInserted = true;
+    for(int i = 0; i < parent->childCount(); ++i){
+        if(parent->child(i)->getAlbumData()["genre"] == album["genre"]){
+
+            for(int j = 0; j < parent->child(i)->childCount(); ++j){
+
+                if(parent->child(i)->child(j)->getAlbumData()["singer"] == album["singer"]){
+                    itemNotInserted = false;
+
+                    parent
+                            ->child(i)
+                            ->child(j)
+                            ->insertChildren(
+                                parent->child(i)->child(j)->childCount(),
+                                1,
+                                rootItem->columnCount()
+                                );
+                    parent
+                            ->child(i)
+                            ->child(j)
+                            ->child(parent->child(i)->child(j)->childCount() - 1)
+                            ->setColumnData(0, album["title"]);
+                    parent
+                            ->child(i)
+                            ->child(j)
+                            ->child(parent->child(i)->child(j)->childCount() - 1)
+                            ->setData(album);
+                }
+            }
+            if(itemNotInserted){
+                itemNotInserted = false;
+
+                parent
+                        ->child(i)
+                        ->insertChildren(
+                            parent->child(i)->childCount(),
+                            1,
+                            rootItem->columnCount()
+                            );
+                parent
+                        ->child(i)
+                        ->child(parent->child(i)->childCount() - 1)
+                        ->setColumnData(0, album["singer"]);
+                parent
+                        ->child(i)
+                        ->child(parent->child(i)->childCount() - 1)
+                        ->setData(album);
+
+                parent
+                        ->child(i)
+                        ->child(
+                            parent->child(i)->childCount() -1
+                            )
+                        ->insertChildren(
+                            parent->child(i)->child(
+                                parent->child(i)->childCount() -1
+                                )->childCount(),
+                            1,
+                            rootItem->columnCount()
+                            );
+                parent
+                        ->child(i)
+                        ->child(
+                            parent->child(i)->childCount() -1
+                            )->child(parent->child(i)->child(
+                                         parent->child(i)->childCount() -1
+                                         )->childCount() - 1)
+                        ->setColumnData(0, album["title"]);
+                parent
+                        ->child(i)
+                        ->child(
+                            parent->child(i)->childCount() -1
+                            )->child(parent->child(i)->child(
+                                         parent->child(i)->childCount() -1
+                                         )->childCount() - 1)
+                        ->setData(album);
+            }
+        }
+    }
+    if(itemNotInserted){
+        parent
+                ->insertChildren(
+                    parent->childCount(),
+                    1,
+                    rootItem->columnCount()
+                    );
+
+        int firstIndex = parent->childCount() - 1;
+
+        parent
+                ->child(firstIndex)
+                ->setColumnData(0, album["genre"]);
+        parent
+                ->child(firstIndex)
+                ->setData(album);
+
+        parent
+                ->child(firstIndex)
+                ->insertChildren(
+                    parent->child(firstIndex)->childCount(),
+                    1,
+                    rootItem->columnCount()
+                    );
+
+        int secondIndex = parent->child(firstIndex)->childCount() - 1;
+
+        parent
+                ->child(firstIndex)
+                ->child(secondIndex)
+                ->setColumnData(0, album["singer"]);
+
+        parent
+                ->child(firstIndex)
+                ->child(secondIndex)
+                ->setData(album);
+
+        parent
+                ->child(firstIndex)
+                ->child(secondIndex)
+                ->insertChildren(
+                    parent->child(firstIndex)->child(secondIndex)->childCount(),
+                    1,
+                    rootItem->columnCount()
+                    );
+        parent
+                ->child(firstIndex)
+                ->child(secondIndex)
+                ->child(parent->child(firstIndex)->child(secondIndex)->childCount() - 1)
+                ->setColumnData(0, album["title"]);
+        parent
+                ->child(firstIndex)
+                ->child(secondIndex)
+                ->child(parent->child(firstIndex)->child(secondIndex)->childCount() - 1)
+                ->setData(album);
+    }
+}
+
+void TreeModel::setAlbumData(const QModelIndex &index, const QMap<QString, QString> albumData, int role){
+    TreeItem* currentItem = this->getItem(index);
+    if (currentItem->getAlbumData() != albumData) {
+        if(currentItem->getAlbumData()["genre"] != albumData["genre"]
+                ||
+                currentItem->getAlbumData()["singer"] != albumData["singer"]) {
+            insertAlbum(this->rootItem, albumData);
+            //            if(this->getItem(index.parent())->childCount() == 0)
+            currentItem->parent()->removeChildren(index.row(), 1);
+        }
+        else if(currentItem->data(0) != albumData["title"]){
+            currentItem->setColumnData(0, albumData["title"]);
+            this->getItem(index)->setData(albumData);
+        }
+        else this->getItem(index)->setData(albumData);
+    }
+    qInfo() << rootItem->childCount();
+    emit dataChanged(QModelIndex(), QModelIndex(), {Qt::DisplayRole, Qt::EditRole});
 }

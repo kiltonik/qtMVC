@@ -2,6 +2,7 @@
 #define ENTRYEDIT_H
 
 #include <QWidget>
+#include <QMap>
 
 namespace Ui {
 class EntryEdit;
@@ -17,8 +18,18 @@ public:
     QMap<QString, QString> interpretData();
     ~EntryEdit();
 
+signals:
+ void save_editing();
+
+public slots:
+    void on_ok_button_clicked();
+
+private slots:
+    void on_cancel_button_clicked();
+
 private:
     Ui::EntryEdit *ui;
+    QMap<QString, QString> album_data;
 };
 
 #endif // ENTRYEDIT_H

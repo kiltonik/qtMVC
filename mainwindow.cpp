@@ -38,6 +38,6 @@ void MainWindow::on_loadData_clicked()
         this->ui->treeView->setModel(model);
         this->ui->treeView->setItemDelegate(new TreeViewDelegate);
         this->ui->treeView->setEditTriggers(QAbstractItemView::DoubleClicked);
-        this->ui->treeView->setSelectionBehavior(QAbstractItemView::SelectRows);
+        this->ui->treeView->setSelectionBehavior(QAbstractItemView::SelectItems);
     }
 }
