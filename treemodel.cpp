@@ -1,7 +1,6 @@
 #include "treemodel.h"
 
 #include <QtWidgets>
-#include<QDebug>
 
 TreeModel::TreeModel(const QStringList &headers, const QString &fileName, QObject *parent)
     : QAbstractItemModel(parent)
@@ -208,7 +207,6 @@ void TreeModel::setupModelData(const QString &fileName, TreeItem *parent)
 
     while(!xmlReader.atEnd() && !xmlReader.hasError()){
         QXmlStreamReader::TokenType token = xmlReader.readNext();
-        auto tmp1 = xmlReader.name();
         if (token == QXmlStreamReader::StartDocument)
             continue;
         if (token == QXmlStreamReader::StartElement)
@@ -221,7 +219,6 @@ void TreeModel::setupModelData(const QString &fileName, TreeItem *parent)
                 QMap<QString, QString> album;
                 while (!(xmlReader.tokenType() == QXmlStreamReader::EndElement && xmlReader.name() == "album"))
                 {
-                    auto tmp = xmlReader.name();
                     if (xmlReader.tokenType() == QXmlStreamReader::StartElement)
                     {
                         if (xmlReader.tokenType() != QXmlStreamReader::StartElement)
@@ -391,13 +388,45 @@ void TreeModel::setAlbumData(const QModelIndex &index, const QMap<QString, QStri
             insertAlbum(this->rootItem, albumData);
             //            if(this->getItem(index.parent())->childCount() == 0)
             currentItem->parent()->removeChildren(index.row(), 1);
+            emit layoutChanged();
         }
         else if(currentItem->data(0) != albumData["title"]){
             currentItem->setColumnData(0, albumData["title"]);
             this->getItem(index)->setData(albumData);
+            emit layoutChanged();
         }
         else this->getItem(index)->setData(albumData);
     }
-    qInfo() << rootItem->childCount();
-    emit dataChanged(QModelIndex(), QModelIndex(), {Qt::DisplayRole, Qt::EditRole});
+}
+
+bool TreeModel::saveDataToFile(QString fileName){
+    QFile file(fileName);
+    bool fileOpened = file.open(QFile::WriteOnly | QFile::Text);
+    if(!fileOpened) return false;
+    QXmlStreamWriter writer(&file);
+    writer.setAutoFormatting(true);
+    writer.writeStartDocument();
+    writer.writeStartElement("albums");
+    for(int i = 0; i < rootItem->childCount(); ++i){
+        for(int j = 0; j < rootItem->child(i)->childCount(); ++j){
+            for(int k = 0; k < rootItem->child(i)->child(j)->childCount(); ++k){
+                auto albumData = rootItem->child(i)->child(j)->child(k)->getAlbumData();
+                writer.writeStartElement("album");
+                writer.writeTextElement("genre", albumData["genre"]);
+                writer.writeTextElement("singer", albumData["singer"]);
+                writer.writeTextElement("title", albumData["title"]);
+                writer.writeTextElement("description", albumData["description"]);
+                writer.writeTextElement("duration", albumData["duration"]);
+                writer.writeTextElement("disc_number", albumData["disc_number"]);
+                writer.writeTextElement("release_date", albumData["release_date"]);
+                writer.writeTextElement("label", albumData["label"]);
+                writer.writeTextElement("track_number", albumData["track_number"]);
+                writer.writeTextElement("studio", albumData["studio"]);
+                writer.writeEndElement();
+            }
+        }
+    }
+    writer.writeEndDocument();
+    file.close();
+    return true;
 }

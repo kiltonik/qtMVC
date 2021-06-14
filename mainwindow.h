@@ -18,6 +18,8 @@ public:
 private slots:
     void on_loadData_clicked();
 
+    void on_saveData_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

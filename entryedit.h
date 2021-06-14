@@ -30,6 +30,7 @@ private slots:
 private:
     Ui::EntryEdit *ui;
     QMap<QString, QString> album_data;
+    QString formatDate();
 };
 
 #endif // ENTRYEDIT_H

@@ -1,6 +1,5 @@
 #include "entryedit.h"
 #include "ui_entryedit.h"
-#include <QDebug>
 #include <QString>
 
 EntryEdit::EntryEdit(QWidget *parent) :
@@ -16,11 +15,10 @@ EntryEdit::~EntryEdit()
 }
 
 void EntryEdit::setupData(QMap<QString, QString> data){
-    qInfo() << data;
     this->album_data = data;
     this->ui->singer_edit->setText(data["singer"]);
     this->ui->title_edit->setText(data["title"]);
-    this->ui->date_spin_box->setDate(QDate::fromString(data["release_date"], "dd.mm.yyyy"));
+    this->ui->date_spin_box->setDate(QDate::fromString(data["release_date"], "dd/MM/yyyy"));
     this->ui->desctiption_edit->setText(data["description"]);
     this->ui->minutes_spin_box->setValue(data["duration"].toInt()/60);
     this->ui->seconds_spin_box->setValue(data["duration"].toInt() % 60);
@@ -35,7 +33,7 @@ void EntryEdit::setupData(QMap<QString, QString> data){
 QMap<QString, QString> EntryEdit::interpretData(){
     this->album_data["singer"] = this->ui->singer_edit->text();
     this->album_data["title"] = this->ui->title_edit->text();
-    this->album_data["release_date"] = this->ui->date_spin_box->date().toString();
+    this->album_data["release_date"] = this->formatDate();
     this->album_data["description"] = this->ui->desctiption_edit->toPlainText();
     this->album_data["duration"] = QString::number(
                 this->ui->minutes_spin_box->value()*60+this->ui->seconds_spin_box->value()
@@ -56,4 +54,15 @@ void EntryEdit::on_ok_button_clicked()
 void EntryEdit::on_cancel_button_clicked()
 {
     this->destroy();
+}
+
+QString EntryEdit::formatDate(){
+    QString day = QString::number(this->ui->date_spin_box->date().day());
+    QString month = QString::number(this->ui->date_spin_box->date().month());
+    QString year = QString::number(this->ui->date_spin_box->date().year());
+    return ((day.length() < 2) ? "0" + day : day)
+            + "/" +
+            ((month.length() < 2) ? "0" + month : month)
+            + "/" +
+            year;
 }

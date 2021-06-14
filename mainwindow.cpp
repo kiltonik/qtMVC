@@ -41,3 +41,23 @@ void MainWindow::on_loadData_clicked()
         this->ui->treeView->setSelectionBehavior(QAbstractItemView::SelectItems);
     }
 }
+
+void MainWindow::on_saveData_clicked()
+{
+    if(static_cast<TreeModel*>(this->ui->treeView->model())
+            ->saveDataToFile(QFileDialog::getSaveFileName(this,
+                                                          tr("Save album data"),
+                                                          tr("album_data.xml")
+                                                          )
+                             )
+            )
+        QMessageBox::information(this,
+                                 "Успешно",
+                                 "Сохранение в файл выполнено успешно",
+                                 QMessageBox::Ok);
+    else
+        QMessageBox::warning(this,
+                             "Ошибка файла",
+                             "Не удалось сохранить в файл",
+                             QMessageBox::Ok);
+}

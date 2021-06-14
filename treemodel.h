@@ -45,13 +45,13 @@ public:
                     const QModelIndex &parent = QModelIndex()) override;
     TreeItem *getItem(const QModelIndex &index) const;
 
+    bool saveDataToFile(QString fileName);
+
 private:
     void setupModelData(const QString &fileName, TreeItem *parent);
 
     TreeItem *rootItem;
 
     void insertAlbum(TreeItem *parent, QMap<QString, QString> album);
-
-
 };
 #endif // TREEMODEL_H
