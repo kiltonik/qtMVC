@@ -15,7 +15,6 @@ EntryEdit::~EntryEdit()
 }
 
 void EntryEdit::setupData(QMap<QString, QString> data){
-    this->album_data = data;
     this->ui->singer_edit->setText(data["singer"]);
     this->ui->title_edit->setText(data["title"]);
     this->ui->date_spin_box->setDate(QDate::fromString(data["release_date"], "dd/MM/yyyy"));
@@ -31,19 +30,20 @@ void EntryEdit::setupData(QMap<QString, QString> data){
 
 
 QMap<QString, QString> EntryEdit::interpretData(){
-    this->album_data["singer"] = this->ui->singer_edit->text();
-    this->album_data["title"] = this->ui->title_edit->text();
-    this->album_data["release_date"] = this->formatDate();
-    this->album_data["description"] = this->ui->desctiption_edit->toPlainText();
-    this->album_data["duration"] = QString::number(
+    QMap<QString, QString> album_data;
+    album_data["singer"] = this->ui->singer_edit->text();
+    album_data["title"] = this->ui->title_edit->text();
+    album_data["release_date"] = this->formatDate();
+    album_data["description"] = this->ui->desctiption_edit->toPlainText();
+    album_data["duration"] = QString::number(
                 this->ui->minutes_spin_box->value()*60+this->ui->seconds_spin_box->value()
                 );
-    this->album_data["genre"] = this->ui->genre_edit->text();
-    this->album_data["studio"] = this->ui->studio_edit->text();
-    this->album_data["label"] = this->ui->lable_edit->text();
-    this->album_data["track_number"] = QString::number(this->ui->tracks_number_spin_box->value());
-    this->album_data["disc_number"] = QString::number(this->ui->discs_number_spin_box->value());
-    return this->album_data;
+    album_data["genre"] = this->ui->genre_edit->text();
+    album_data["studio"] = this->ui->studio_edit->text();
+    album_data["label"] = this->ui->lable_edit->text();
+    album_data["track_number"] = QString::number(this->ui->tracks_number_spin_box->value());
+    album_data["disc_number"] = QString::number(this->ui->discs_number_spin_box->value());
+    return album_data;
 }
 
 void EntryEdit::on_ok_button_clicked()
@@ -56,6 +56,7 @@ void EntryEdit::on_cancel_button_clicked()
     this->destroy();
 }
 
+//Подгоняет данные из поля изменения в формат "dd/MM/yyyy"
 QString EntryEdit::formatDate(){
     QString day = QString::number(this->ui->date_spin_box->date().day());
     QString month = QString::number(this->ui->date_spin_box->date().month());

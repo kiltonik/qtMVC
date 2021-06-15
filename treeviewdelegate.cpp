@@ -48,14 +48,13 @@ bool TreeViewDelegate::editorEvent(QEvent *event,
                                    const QStyleOptionViewItem &option,
                                    const QModelIndex &index) {
     qInfo() << index.row() << " " << index.column();
+
+    //Проверяет пришедший евент, если он является двойным кликом, то открывает окно редактирования
     if(!model->hasChildren(index) &&
             static_cast<QMouseEvent*>(event)->type() == QEvent::MouseButtonDblClick){
         EntryEdit *editor = new EntryEdit;
         editor->show();
         this->setEditorData(editor, index);
-//        editor->setupData(
-//                    static_cast<const TreeModel*>(index.model())->getItem(index)->getAlbumData()
-//                    );
         connect(editor, &EntryEdit::save_editing, [=](){
             this->setModelData(editor, model, index);
             delete editor;

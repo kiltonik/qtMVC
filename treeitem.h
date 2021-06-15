@@ -5,30 +5,30 @@
 #include <QVector>
 #include <QVariant>
 
-class TreeItem
+class TreeItem // НОДа дерева
 {
 public:
-    explicit TreeItem(const QVector<QVariant> &data, TreeItem *parent = nullptr);
-    ~TreeItem();
+    explicit TreeItem(const QVector<QVariant> &data, TreeItem *parent = nullptr); // Конструктор
+    ~TreeItem(); // Деструктор
 
-    TreeItem *child(int number);
-    int childCount() const;
-    int columnCount() const;
-    QVariant data(int column) const;
-    bool insertChildren(int position, int count, int columns);
-    bool insertColumns(int position, int columns);
-    TreeItem *parent();
-    bool removeChildren(int position, int count);
-    bool removeColumns(int position, int columns);
-    int childNumber() const;
-    bool setColumnData(int column, const QVariant &value);
-    void setData(const QMap<QString, QString> album);
-    QMap<QString, QString> getAlbumData();
+    TreeItem *child(int number); // Функция получения ссылки на ребенка по его индексу
+    int childCount() const; // Функция получения числа детей
+    int columnCount() const; // Функция получения числа колонок
+    QVariant data(int column) const; // Функция получения данных из колонки по её индексу
+    bool insertChildren(int position, int count, int columns); // Функция вставки детей
+    bool insertColumns(int position, int columns); // Функция вставки колонок
+    TreeItem *parent(); // Функция получения ссылки на родителя
+    bool removeChildren(int position, int count); // Функция удаляющая нужное количество детей
+    bool removeColumns(int position, int columns); // Функция удаляющая колонки
+    int childNumber() const; // Функция возвращает индекс текущей ноды относительно родителя
+    bool setColumnData(int column, const QVariant &value); // Функция вставляет данные в нужную колонку
+    void setData(const QMap<QString, QString> album); // Функция сохраняет в ноду данные об альбоме
+    QMap<QString, QString> getAlbumData(); // Функция возвращает данные об альбоме
 
 private:
-    QVector<TreeItem*> childItems;
-    QVector<QVariant> columnData;
-    QMap<QString, QString> albumData;
-    TreeItem *parentItem;
+    QVector<TreeItem*> childItems; // Вектор ссылок на дочерние ноды
+    QVector<QVariant> columnData; // Данные записанные в колонки
+    QMap<QString, QString> albumData; // Данные об альбоме
+    TreeItem *parentItem; // Ссылка на родительский элемент
 };
 #endif // TREEITEM_H
